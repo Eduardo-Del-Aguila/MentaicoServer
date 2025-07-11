@@ -1,22 +1,24 @@
-// const { OpenAI } = require("openai");
-// require("dotenv").config();
+const OpenAI = require('openai');
 
-// const openai = new OpenAI({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
-// exports.generateResponse = async (req, res) => {
-//     try {
-//     const { prompt } = req.body;
+exports.responderForo = async (req, res) => {
+  const { pregunta } = req.body;
 
-//     const completion = await openai.chat.completions.create({
-//         model: "gpt-3.5-turbo", 
-//         messages: [{ role: "user", content: prompt }],
-//     });
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      messages: [
+        { role: "system", content: "Eres un consejero empático en un foro de salud mental." },
+        { role: "user", content: pregunta }
+      ],
+      model: "gpt-3.5-turbo"
+    });
 
-//         res.json({ response: completion.choices[0].message.content });
-//     } catch (error) {
-//         console.error("Error con OpenAI:", error);
-//         res.status(500).json({ message: "Error al generar respuesta con IA" });
-//     }
-// };
+    res.json({ respuesta: chatCompletion.choices[0].message.content });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error al generar respuesta", details: err.message });
+  }
+};
