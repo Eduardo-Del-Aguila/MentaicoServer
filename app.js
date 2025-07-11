@@ -10,7 +10,13 @@ const openaiRoutes = require("./routers/ai.routes");
 
 
 app.use(cors({
-  origin: 'https://mentaiko-oficial.netlify.app/' 
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS no permitido'));
+    }
+  }
 }));
 app.use(express.json());
 
@@ -20,6 +26,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/response', responseRoutes);
 
 const PORT = process.env.PORT || 3000;
+
+app.get('/', (req,res)=>{
+  res.send('Buenas desde el backend')
+})
+
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
