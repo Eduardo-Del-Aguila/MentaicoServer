@@ -9,7 +9,9 @@ const app = express();
 const openaiRoutes = require("./routers/ai.routes");
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://mentaiko-oficial.netlify.app/' 
+}));
 app.use(express.json());
 
 
